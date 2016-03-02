@@ -1,5 +1,6 @@
 import os
 import sys
+import hashlib
 
 from django.conf import settings
 
@@ -24,10 +25,11 @@ settings.configure(
 from django import forms
 from django.conf.urls import url
 from django.core.wsgi import get_wsgi_application
+from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.views.decorators.http import  etag
 from io import BytesIO
 from PIL import Image, ImageDraw
-from django.core.cache import cache
 
 class ImageForm(forms.Form):
     """Formulário para validar o placeholder de imagem solicitado"""
@@ -56,6 +58,12 @@ class ImageForm(forms.Form):
         return content
 
 
+def generate_tag(request, width, height):
+    content = 'Placeholder: {0} x {1}'.format(width, height)
+    return hashlib.sha1(content.encode('utf-8')).hexdigest()
+
+
+@etag(generate_tag)
 def placeholder(request,width,height):
     form = ImageForm({'height': height, 'width': width})
     if form.is_valid():
