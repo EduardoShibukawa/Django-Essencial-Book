@@ -1,8 +1,22 @@
+import os
 import sys
 
 from django.conf import settings
 
+BASE_DIR = os.path.dirname(__file__)
 
+""""
+DEBUG=True,
+SECRET_KEY='b0mqvak1p2sqm6p#+8o8fyxf+ox(le)8&jh_5^sxa!=7!+wxj0',
+ROOT_URLCONF='sitebuilder.urls',
+MIDDLEWARE_CLASSES=(),
+INSTALLED_APPS=(
+    'django.contrib.staticfiles',
+    'sitebuilder',
+),
+STATIC_URL='/static/',
+SITE_PAGES_DIRECTORY=os.path.join(BASE_DIR, 'pages'),
+"""""
 settings.configure(
     DEBUG=True,
     SECRET_KEY='b0mqvak1p2sqm6p#+8o8fyxf+ox(le)8&jh_5^sxa!=7!+wxj0',
@@ -10,10 +24,17 @@ settings.configure(
     MIDDLEWARE_CLASSES=(),
     INSTALLED_APPS=(
         'django.contrib.staticfiles',
-        'django.contrib.webdesign',
         'sitebuilder',
     ),
+    TEMPLATES=(
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [],
+            'APP_DIRS': True,
+        },
+    ),
     STATIC_URL='/static/',
+    SITE_PAGES_DIRECTORY=os.path.join(BASE_DIR, 'pages'),
 )
 
 
