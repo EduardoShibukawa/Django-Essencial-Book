@@ -21,6 +21,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Solicita as páginas e gera saída"""
+        settings.DEBUG = False
+        settings.COMPRESS_ENABLED = True
         if args:
             pages = args
             available = list(get_pages())
@@ -38,6 +40,7 @@ class Command(BaseCommand):
             os.mkdir(settings.SITE_OUTPUT_DIRECTORY)
             os.makedirs(settings.STATIC_ROOT)
         call_command('collectstatic', interactive=False, clear=True, verbosity=0)
+        call_command('compress', interactive=False, force=True)
         client = Client()
         for page in pages:
             url = reverse('page', kwargs={'slug': page})
@@ -50,5 +53,3 @@ class Command(BaseCommand):
                     os.makedirs(output_dir)
             with open(os.path.join(output_dir, 'index.html'), 'wb') as f:
                 f.write(response.content)
-
-
